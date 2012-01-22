@@ -171,6 +171,7 @@ SCUI.DatePickerView = SC.View.extend(
   
   selectToday: function(){
     this._calendar.set('selectedDate', SC.DateTime.create());
+    this._calendar.set('monthStartOn', SC.DateTime.create({day: 1, month: 1}));
   //  this.hideCalendar();
   },  
   
