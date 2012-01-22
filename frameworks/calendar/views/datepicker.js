@@ -9,7 +9,8 @@
 
   @extends SC.View
   @author Evin Grano
-  @version 0.1
+  @modified by BenS for DashDit
+  @version 0.1.A
   @since 0.1
 */
 
@@ -41,7 +42,7 @@ SCUI.DatePickerView = SC.View.extend(
   _date_button: null,
   _calendar_popup: null,
   _calendar: null,
-  _layout: {width: 195, height: 25},
+  _layout: {width: 100, height: 24},
   
   // display properties that should automatically cause a refresh.
   displayProperties: ['date', 'isEditing'],
@@ -62,37 +63,15 @@ SCUI.DatePickerView = SC.View.extend(
     // init the dateString to whatever date we're starting with (if present)
     this.set('dateString', this._genDateString(this.get('date')));
     
-    var textFieldDesign = {
-      layout: {left: 0, top: 0, right: 0, bottom: 0},
-      classNames: ['scui-datechooser-text'],
-      isEnabled: YES,
-      valueBinding: SC.Binding.from('.dateString', that),
-      hintBinding: SC.Binding.from('hint', that),
-      mouseDown: function (evt) {
-        that.toggle();
-        sc_super();
-      }
-    };
-    
-    if (this.get('isTextFieldEnabled')) {
-      textFieldDesign.isEnabledBinding = SC.binding('isEnabled', that);
-    } else {
-      textFieldDesign.isEnabled = NO;
-    }
-    
-    // First, Build the Textfield for the date chooser
-    view = this._textfield = this.createChildView( 
-      SC.TextFieldView.design(textFieldDesign)
-    );
-    childViews.push(view);
     this.bind('isEditing', SC.Binding.from('isEditing', view).oneWay());
-        
-    // Now, set up the button to launch the Calendar Datepicker
+    
+	 // Now, set up the button to launch the Calendar Datepicker    
     view = this._date_button = this.createChildView( 
-      SC.View.design( SCUI.SimpleButton, {
-        classNames: ['scui-datechooser-button', 'calendar-icon'],
-        layout: {right: 5, top: 4, width: 16, height: 16},
+      SC.ButtonView.design(  {
+        classNames: [''],
+        layout: {width: 100, height: 24},
         target: this,
+        title: 'calendar',
         action: 'toggle',
         isEnabledBinding: SC.binding('isEnabled', that)
       })
@@ -121,7 +100,7 @@ SCUI.DatePickerView = SC.View.extend(
         }),
         todayButton: SC.View.extend(SCUI.SimpleButton, {
           classNames: ['date-today'],
-          layout: {left: 11, bottom: 7, width: 50, height: 16 },
+          layout: {left: 5, bottom: 5, width: 36, height: 18  },
           target: this,
           action: 'selectToday',
           isVisible: hb,
@@ -133,16 +112,16 @@ SCUI.DatePickerView = SC.View.extend(
         }),
         noneButton: SC.View.design( SCUI.SimpleButton, {
           classNames: ['date-none'],
-          layout: {right: 11, bottom: 7, width: 50, height: 16 },
+          layout: {right: 5, bottom: 5, width: 36, height: 18 },
           target: this,
           action: 'clearSelection',
           isVisible: hb,
           render: function(context, firstTime) {
             if (firstTime) {
-              context.push('None');
+              context.push('Clear');
             }
           }       
-        })
+        })       
       })
     });
     
@@ -192,12 +171,12 @@ SCUI.DatePickerView = SC.View.extend(
   
   selectToday: function(){
     this._calendar.set('selectedDate', SC.DateTime.create());
-    this.hideCalendar();
-  },
+  //  this.hideCalendar();
+  },  
   
   clearSelection: function(){
     this._calendar.set('selectedDate', null);
-    this.hideCalendar();
+   // this.hideCalendar();
   },
   
   /**
@@ -211,7 +190,7 @@ SCUI.DatePickerView = SC.View.extend(
   
   _dateDidChange: function(){
     this.set('dateString', this._genDateString(this.get('date')));
-    this.hideCalendar();
+   // this.hideCalendar();
   }.observes('date')
 
 }) ;
