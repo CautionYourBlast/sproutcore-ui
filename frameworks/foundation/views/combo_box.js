@@ -261,19 +261,19 @@ SCUI.ComboBoxView = SC.View.extend( SC.Control, SC.Editable, {
     The text field child view class.  Override this to change layout, CSS, etc.
   */
   textFieldView: SC.TextFieldView.extend({
-    classNames: 'scui-combobox-text-field-view',
-    layout: { top: 0, left: 0, height: 22, right: 28 },
+    classNames: 'field-value',
+    //layout: { top: 0, left: 0, height: 22, right: 28 },
     spellCheckEnabled: NO
   }),
 
   /**
     The drop down button view class.  Override this to change layout, CSS, etc.
-  */
+  
   dropDownButtonView: SC.ButtonView.extend({
     layout: { top: 0, right: 0, height: 24, width: 28 },
     icon: 'caret'
   }),
-  
+  */
   /*
     Set at design time only.  Should be a view class specified at design time.
     At run time, if used, it will be replaced with an instance of the type as a
