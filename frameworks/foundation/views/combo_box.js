@@ -220,7 +220,6 @@ SCUI.ComboBoxView = SC.View.extend( SC.Control, SC.Editable, {
   */
   selectedObject: function(key, value) {
     var objects, comboBoxValue, valueKey;
-
     if (value !== undefined) {
       this.setIfChanged('value', this._getObjectValue(value, this.get('valueKey')));
     }
@@ -243,11 +242,9 @@ SCUI.ComboBoxView = SC.View.extend( SC.Control, SC.Editable, {
         value = this.get('value');
       }
     }
-
     this._lastSelectedObject = value;
-
     return value;
-  }.property('value').cacheable(),
+  }.property('value'),
 
   selectedObjectName: function() {
     return this._getObjectName(this.get('selectedObject'), this.get('nameKey'), this.get('localize'));
@@ -262,7 +259,6 @@ SCUI.ComboBoxView = SC.View.extend( SC.Control, SC.Editable, {
   */
   textFieldView: SC.TextFieldView.extend({
     classNames: 'field-value',
-    //layout: { top: 0, left: 0, height: 22, right: 28 },
     spellCheckEnabled: NO
   }),
 
@@ -328,10 +324,11 @@ SCUI.ComboBoxView = SC.View.extend( SC.Control, SC.Editable, {
     if (SC.kindOf(view, SC.View) && view.isClass) {
       view = this.createChildView(view, {
         isEnabled: isEnabled,
+        
         hintBinding: SC.Binding.from('hint', this),
-        editableDelegate: this, // pass SC.Editable calls up to the owner view
+        //editableDelegate: this, // pass SC.Editable calls up to the owner view
         keyDelegate: this, // the text field will be the key responder, but offer them to the owner view first
-
+		
         // Override key handlers to first offer them to the delegate.
         // Only call base class implementation if the delegate refuses the event.
         keyDown: function(evt) {
@@ -382,7 +379,6 @@ SCUI.ComboBoxView = SC.View.extend( SC.Control, SC.Editable, {
     else {
       this.set('dropDownButtonView', null);
     }
-
     this.set('childViews', childViews);
   },
 
@@ -455,12 +451,12 @@ SCUI.ComboBoxView = SC.View.extend( SC.Control, SC.Editable, {
     text field committing editing.
   */
   commitEditing: function() {
+  
     var textField = this.get('textFieldView');
 
     if (this.get('isEditing')) {
       // sync text field value with name of selected object
       this._selectedObjectNameDidChange();
-
       this.set('isEditing', NO);
       // in IE, as soon as you the user browses through the results in the picker pane by 
       // clicking on the scroll bar or the scroll thumb, the textfield loses focus causing 
@@ -476,7 +472,7 @@ SCUI.ComboBoxView = SC.View.extend( SC.Control, SC.Editable, {
     if (textField && textField.get('isEditing')) {
       textField.commitEditing();
     }
-    
+
     return YES;
   },
 
@@ -652,7 +648,7 @@ SCUI.ComboBoxView = SC.View.extend( SC.Control, SC.Editable, {
     //console.log('%@._objectsDidChange(%@)'.fmt(this, this.get('objects')));
 
     this.notifyPropertyChange('filteredObjects'); // force a recompute next time 'filteredObjects' is asked for
-    this.notifyPropertyChange('selectedObject');
+    //this.notifyPropertyChange('selectedObject'); // Ben: this causes an issue with resetting to the last record value i.e. wiping any free text entered by the user.
   }.observes('*objects.[]'),
 
   _filteredObjectsLengthDidChange: function() {
@@ -689,7 +685,6 @@ SCUI.ComboBoxView = SC.View.extend( SC.Control, SC.Editable, {
 
   _selectedObjectDidChange: function() {
     var selectedObject = this.get('selectedObject');
-
     if (this.getPath('_listSelection.firstObject') !== selectedObject) {
       this.setPath('_listSelection', selectedObject ? SC.SelectionSet.create().addObject(selectedObject) : SC.SelectionSet.EMPTY);
     }
@@ -810,6 +805,7 @@ SCUI.ComboBoxView = SC.View.extend( SC.Control, SC.Editable, {
           
             // transparently notice mouseUp and use it as trigger
             // to close the list pane
+            
             mouseUp: function() {
               var ret = sc_super();
               var target = this.get('target');
@@ -895,9 +891,9 @@ SCUI.ComboBoxView = SC.View.extend( SC.Control, SC.Editable, {
           
       if (filter && value && (value.toLowerCase() === filter.toLowerCase())) {
         selection = obj;
-      } 
+      }
     }
-    
+
     if (selection) this.setIfChanged('selectedObject', selection);
     this.hideList();
   },
