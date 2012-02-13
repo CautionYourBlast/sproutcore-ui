@@ -42,7 +42,7 @@ SCUI.DatePickerView = SC.View.extend(
   _date_button: null,
   _calendar_popup: null,
   _calendar: null,
-  _layout: {width: 100, height: 24},
+  _layout: {width: 100, height: 27},
   
   // display properties that should automatically cause a refresh.
   displayProperties: ['date', 'isEditing'],
@@ -63,19 +63,19 @@ SCUI.DatePickerView = SC.View.extend(
     // init the dateString to whatever date we're starting with (if present)
     this.set('dateString', this._genDateString(this.get('date')));
     
-    this.bind('isEditing', SC.Binding.from('isEditing', view).oneWay());
-    
 	 // Now, set up the button to launch the Calendar Datepicker    
     view = this._date_button = this.createChildView( 
       SC.ButtonView.design(  {
         classNames: [''],
-        layout: {width: 100, height: 24},
+        layout: {width: 100, height: 27},
         target: this,
         title: 'calendar',
         action: 'toggle',
         isEnabledBinding: SC.binding('isEnabled', that)
       })
     );
+    this.bind('isEditing', SC.Binding.from('isEditing', view).oneWay());
+
     childViews.push(view);
     
     this.set('childViews', childViews);
