@@ -82,7 +82,7 @@ SCUI.CalendarView = SC.View.extend({
       uniqueDayIdentifier = this._createUniqueDayIdentifier(currDate);
       
       if (currDate.get('month') < monthStartOn.get('month') || currDate.get('month') > monthStartOn.get('month')) {
-        context =  context.begin('div').attr('id', uniqueDayIdentifier).addClass('day past').text(currDate.get('day')).end();
+        context =  context.begin('div').attr('id', uniqueDayIdentifier).addClass('day past').text(''+currDate.get('day')).end();
         
       } else {
         classNames = ['present'];
@@ -95,7 +95,7 @@ SCUI.CalendarView = SC.View.extend({
           classNames.push('sel');
         }
         
-        context = context.begin('div').attr('id', uniqueDayIdentifier).addClass('day').addClass(classNames.join(' ')).text(currDate.get('day')).end();
+        context = context.begin('div').attr('id', uniqueDayIdentifier).addClass('day').addClass(classNames.join(' ')).text(''+currDate.get('day')).end();
       }
       currDate = currDate.advance({ day: 1 });
     }
