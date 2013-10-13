@@ -312,8 +312,6 @@ SCUI.ComboBoxView = SC.View.extend( SC.Control, SC.Editable, {
     if (this._listPane) {
       this._listPane.destroy();
     }
-
-    sc_super();
   },
 
   createChildViews: function() {

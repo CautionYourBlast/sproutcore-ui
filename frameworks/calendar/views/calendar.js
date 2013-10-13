@@ -11,6 +11,7 @@ SCUI.CalendarView = SC.View.extend({
   
   monthStartOn: SC.DateTime.create({day: 1, month: 1}),
   selectedDate: null,
+  showYearButtons: YES,
   
   displayProperties: ['selectedDate', 'monthStartOn'],
   
@@ -47,11 +48,6 @@ SCUI.CalendarView = SC.View.extend({
     } else {
       param = {month: unit};
     };
-    
-    this.set('monthStartOn', monthStartOn.advance(param));
-    this.$('.button.active').removeClass('active');
-    
-    return YES;
   },
   
   render: function(context, firstTime) {
