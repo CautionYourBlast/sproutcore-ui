@@ -9,8 +9,8 @@ SCUI.CalendarView = SC.View.extend({
   
   weekdayStrings: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
   
-  monthStartOn: SC.DateTime.create({day: 1, month: 1}),
-  selectedDate: null,
+  monthStartOn: SC.DateTime.create({day: 1}),
+  selectedDate: SC.DateTime.create(),
   showYearButtons: YES,
   
   displayProperties: ['selectedDate', 'monthStartOn'],
@@ -23,32 +23,34 @@ SCUI.CalendarView = SC.View.extend({
   mouseDown: function(evt) {
     var date = this._parseSelectedDate(evt.target.id);
     if (date) this.set('selectedDate', date);
+    //console.log('selectedDate...' + this.selectedDate);
     var target = evt.target;
     var className = target.className;
-    
     if (className.match('button')) { this.$(target).addClass('active'); }
-    
     return YES;
-  },
+  }, 
   
-  mouseUp: function(evt) {
-    var monthStartOn = this.get('monthStartOn');
-    
-    var className = evt.target.className, param;        
-    if (className.match('previous')) {
-      unit = -1;
-    } else if (className.match('next')){
-      unit = 1;
-    } else {
-      unit = 0;
-    };
-        
-    if (className.match('year')) {
-      param = {year: unit};
-    } else {
-      param = {month: unit};
-    };
-  },
+	mouseUp: function(evt) {
+	   var monthStartOn = this.get('monthStartOn');
+		var className = evt.target.className, param;
+
+		if (className.match('button')) {
+			var unit = className.match('previous') ? -1 : 1;
+	
+			if (className.match('year')) {
+				param = {year: unit};
+			} else {
+			param = {month: unit};
+			};
+	
+			this.set('monthStartOn', monthStartOn.advance(param));
+			this.$('.button.active').removeClass('active');
+			return YES;
+	   };
+		this.set('monthStartOn', monthStartOn.advance(param));
+		this.$('.button.active').removeClass('active');
+		return YES;
+	},
   
   render: function(context, firstTime) {
     var monthStartOn = this.get('monthStartOn');
@@ -60,25 +62,26 @@ SCUI.CalendarView = SC.View.extend({
     var classNames, uniqueDayIdentifier;
     
     context = context.begin('div').addClass('header')
-                        .begin('div').addClass('month').text(monthStartOn.toFormattedString('%B %Y')).end()
-                        .begin('div').addClass('button previous month').end()
-                        .begin('div').addClass('button next month').end()
-                        .begin('div').addClass('button previous year').end()
-                        .begin('div').addClass('button next year').end()
-                      .end()
-                      .begin('div').addClass('body');
-    
+        .begin('div').addClass('month').text(monthStartOn.toFormattedString('%B %Y')).end()
+        .begin('div').addClass('button previous month').end()
+        .begin('div').addClass('button next month').end()
+        .begin('div').addClass('button previous year').end()
+        .begin('div').addClass('button next year').end()
+      	.end()
+      	.begin('div').addClass('body');
     for (var i = 0; i < 7; i++) {
       context = context.begin('div').addClass('day name').text(weekdayStrings[i]).end();
     }
     
     context = context.begin('div').addClass('grid');
     
+    sc_super();
+    
     for (var gIdx = 0; gIdx < 42; gIdx++) {
       uniqueDayIdentifier = this._createUniqueDayIdentifier(currDate);
       
       if (currDate.get('month') < monthStartOn.get('month') || currDate.get('month') > monthStartOn.get('month')) {
-        context =  context.begin('div').attr('id', uniqueDayIdentifier).addClass('day past').text(''+currDate.get('day')).end();
+        context =  context.begin('div').setAttr('id', uniqueDayIdentifier).addClass('day past').text(''+currDate.get('day')).end();
         
       } else {
         classNames = ['present'];
@@ -91,9 +94,10 @@ SCUI.CalendarView = SC.View.extend({
           classNames.push('sel');
         }
         
-        context = context.begin('div').attr('id', uniqueDayIdentifier).addClass('day').addClass(classNames.join(' ')).text(''+currDate.get('day')).end();
+        context = context.begin('div').setAttr('id', uniqueDayIdentifier).addClass('day').addClass(classNames.join(' ')).text(''+currDate.get('day')).end();
       }
       currDate = currDate.advance({ day: 1 });
+      
     }
     
     context = context.end().end();

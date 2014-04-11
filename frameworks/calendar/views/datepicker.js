@@ -171,13 +171,12 @@ SCUI.DatePickerView = SC.View.extend(
   
   selectToday: function(){
     this._calendar.set('selectedDate', SC.DateTime.create());
-    this._calendar.set('monthStartOn', SC.DateTime.create({day: 1, month: 1}));
-  //  this.hideCalendar();
+    this._calendar.set('monthStartOn', SC.DateTime.create());
+    this._calendar.set('monthStartOn', this._calendar.selectedDate.adjust({ day: 1 }));
   },  
   
   clearSelection: function(){
     this._calendar.set('selectedDate', null);
-   // this.hideCalendar();
   },
   
   /**
@@ -191,7 +190,6 @@ SCUI.DatePickerView = SC.View.extend(
   
   _dateDidChange: function(){
     this.set('dateString', this._genDateString(this.get('date')));
-   // this.hideCalendar();
   }.observes('date')
 
 }) ;
